@@ -377,7 +377,13 @@
 		},
 		"configuration": {
 			"title": "Cline",
-			"properties": {}
+			"properties": {
+				"cline.commitMessageRules": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "Custom rules template for generating commit messages. Supports placeholders like `{{rules}}`. Example: `Write in Chinese. Follow conventional commit format.`"
+				}
+			}
 		}
 	},
 	"scripts": {

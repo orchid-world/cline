@@ -172,6 +172,14 @@ async function performCommitMsgGeneration(controller: Controller, gitDiff: strin
 
 		const prompts = [PROMPT.instruction]
 
+		// Get custom rules from VSCode settings
+		const customRules = vscode.workspace.getConfiguration("cline").get<string>("commitMessageRules")
+
+		// Append custom rules if configured
+		if (customRules && customRules.trim()) {
+			prompts.push(`# Custom Rules\n${customRules.trim()}`)
+		}
+
 		const workspaceManager = await controller.ensureWorkspaceManager()
 		if (workspaceManager) {
 			const workspacesJson = await workspaceManager.buildWorkspacesJson()
