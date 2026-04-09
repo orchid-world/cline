@@ -22,6 +22,7 @@ import { vscodeHostBridgeClient } from "@/hosts/vscode/hostbridge/client/host-gr
 import { createStorageContext } from "@/shared/storage/storage-context"
 import { readTextFromClipboard, writeTextToClipboard } from "@/utils/env"
 import { initialize, tearDown } from "./common"
+import { addFileOrFolderToCline } from "./core/controller/commands/addFileToCline"
 import { addToCline } from "./core/controller/commands/addToCline"
 import { explainWithCline } from "./core/controller/commands/explainWithCline"
 import { fixWithCline } from "./core/controller/commands/fixWithCline"
@@ -370,6 +371,19 @@ export async function activate(context: vscode.ExtensionContext) {
 				return
 			}
 			await improveWithCline(context.controller, context.commandContext)
+		}),
+	)
+
+	// Register explorer context menu commands for adding files/folders to chat
+	context.subscriptions.push(
+		vscode.commands.registerCommand(commands.AddFileToChat, async (uri: vscode.Uri) => {
+			await addFileOrFolderToCline(uri.fsPath, false)
+		}),
+	)
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand(commands.AddFolderToChat, async (uri: vscode.Uri) => {
+			await addFileOrFolderToCline(uri.fsPath, true)
 		}),
 	)
 

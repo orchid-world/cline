@@ -245,6 +245,16 @@
 				"title": "Add to Cline Chat",
 				"category": "Cline",
 				"icon": "$(link-external)"
+			},
+			{
+				"command": "cline.addFileToChat",
+				"title": "Add File to Cline",
+				"category": "Cline"
+			},
+			{
+				"command": "cline.addFolderToChat",
+				"title": "Add Folder to Cline",
+				"category": "Cline"
 			}
 		],
 		"keybindings": [
@@ -307,6 +317,18 @@
 					"command": "cline.addToChat",
 					"group": "navigation",
 					"when": "editorHasSelection"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "cline.addFileToChat",
+					"group": "navigation",
+					"when": "resource"
+				},
+				{
+					"command": "cline.addFolderToChat",
+					"group": "navigation",
+					"when": "explorerResourceIsFolder"
 				}
 			],
 			"terminal/context": [
