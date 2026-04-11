@@ -104,7 +104,7 @@ import {
 	ClineUserContent,
 } from "@/shared/messages"
 import { ApiFormat } from "@/shared/proto/cline/models"
-import { ShowMessageType } from "@/shared/proto/index.host"
+import { PlaySoundRequest, ShowMessageType } from "@/shared/proto/index.host"
 import { Logger } from "@/shared/services/Logger"
 import { Session } from "@/shared/services/Session"
 import { RuleContextBuilder } from "../context/instructions/user-instructions/RuleContextBuilder"
@@ -666,6 +666,21 @@ export class Task {
 		files?: string[]
 		askTs?: number
 	}> {
+		// Play notification sound when user needs to make a decision
+		// Skip for:
+		// - command_output (streaming output)
+		// - resume tasks
+		// - partial messages (sound plays when the final complete message is sent)
+		if (
+			type !== "command_output" &&
+			type !== "resume_task" &&
+			type !== "resume_completed_task" &&
+			type !== "completion_result" &&
+			partial !== true
+		) {
+			HostProvider.window.playSound(PlaySoundRequest.create({ soundName: "notification" })).catch(() => {})
+		}
+
 		// Allow resume asks even when aborted to enable resume button after cancellation
 		if (this.taskState.abort && type !== "resume_task" && type !== "resume_completed_task") {
 			throw new Error("Cline instance aborted")
