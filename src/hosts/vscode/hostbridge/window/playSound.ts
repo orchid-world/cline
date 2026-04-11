@@ -1,10 +1,11 @@
-import { exec } from "child_process"
+import path from "path"
+import sound from "sound-play"
+import { HostProvider } from "@/hosts/host-provider"
 import { PlaySoundRequest, PlaySoundResponse } from "@/shared/proto/index.host"
 import { Logger } from "@/shared/services/Logger"
 
 /**
- * Plays a sound notification using system commands.
- * Cross-platform support for Windows, macOS, and Linux.
+ * Plays a sound notification using sound-play package.
  *
  * @param request - The play sound request containing the sound name
  * @returns Empty response on success
@@ -13,8 +14,12 @@ export async function playSound(request: PlaySoundRequest): Promise<PlaySoundRes
 	const { soundName } = request
 
 	if (soundName && soundName.trim()) {
+		const soundPath = getNotificationSoundPath()
+		Logger.debug(`[playSound] Attempting to play: ${soundPath}`)
+
 		try {
-			await playSystemSound(soundName)
+			await sound.play(soundPath)
+			Logger.debug(`[playSound] Sound played successfully`)
 		} catch (error) {
 			Logger.error(`[playSound] Failed to play sound: ${soundName}`, error)
 		}
@@ -24,67 +29,20 @@ export async function playSound(request: PlaySoundRequest): Promise<PlaySoundRes
 }
 
 /**
- * Play a system sound based on the platform.
- * Uses native system sounds for best user experience.
+ * Get the path to the custom notification sound.
  */
-function playSystemSound(soundName: string): Promise<void> {
-	return new Promise((resolve) => {
-		let command: string
-		const platform = process.platform
-
-		switch (soundName) {
-			case "success":
-				if (platform === "win32") {
-					// Windows: Use PowerShell to play system sound
-					command = `powershell -c "[System.Media.SystemSounds]::Hand.Play()"`
-				} else if (platform === "darwin") {
-					// macOS: Use AppleScript to play beep
-					command = `osascript -e 'tell app "System Events" to beep'`
-				} else {
-					// Linux: Try paplay or fallback to beep
-					command = `paplay /usr/share/sounds/gnome/default/stereo/dialog-information.ogg 2>/dev/null || echo -e 'a'`
-				}
-				break
-
-			case "error":
-				if (platform === "win32") {
-					command = `powershell -c "[System.Media.SystemSounds]::Hand.Play()"`
-				} else if (platform === "darwin") {
-					command = `osascript -e 'tell app "System Events" to beep'`
-				} else {
-					command = `paplay /usr/share/sounds/gnome/default/stereo/dialog-error.ogg 2>/dev/null || echo -e 'a'`
-				}
-				break
-
-			case "warning":
-				if (platform === "win32") {
-					command = `powershell -c "[System.Media.SystemSounds]::Exclamation.Play()"`
-				} else if (platform === "darwin") {
-					command = `osascript -e 'tell app "System Events" to beep'`
-				} else {
-					command = `paplay /usr/share/sounds/gnome/default/stereo/dialog-warning.ogg 2>/dev/null || echo -e 'a'`
-				}
-				break
-
-			default:
-				// Default system beep
-				if (platform === "win32") {
-					command = `powershell -c "[Console]::Beep(500,300)"`
-				} else if (platform === "darwin") {
-					command = `osascript -e 'tell app "System Events" to beep'`
-				} else {
-					command = `echo -e 'a'`
-				}
+function getNotificationSoundPath(): string {
+	try {
+		if (HostProvider.isInitialized()) {
+			const extensionPath = HostProvider.get().extensionFsPath
+			return path.join(extensionPath, "assets", "sounds", "notification.mp3")
 		}
+	} catch (error) {
+		Logger.debug(`[playSound] HostProvider not available: ${error}`)
+	}
 
-		exec(command, (error) => {
-			if (error) {
-				// Fallback to basic beep if system sound fails
-				Logger.debug(`[playSound] Playing sound: ${soundName}`)
-				resolve() // Don't fail, just log
-			} else {
-				resolve()
-			}
-		})
-	})
+	// Fallback: try to find the file relative to current working directory
+	const fallbackPath = path.join(process.cwd(), "assets", "sounds", "notification.mp3")
+	Logger.debug(`[playSound] Using fallback path: ${fallbackPath}`)
+	return fallbackPath
 }
