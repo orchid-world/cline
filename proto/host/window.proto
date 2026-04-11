@@ -37,7 +37,17 @@ service WindowService {
 
   // Returns information about the current editor
   rpc getActiveEditor(GetActiveEditorRequest) returns (GetActiveEditorResponse);
+
+  // Plays a sound notification
+  rpc playSound(PlaySoundRequest) returns (PlaySoundResponse);
 }
+
+message PlaySoundRequest {
+  // Sound name (e.g., "default", "success", "error") - host-specific
+  string sound_name = 1;
+}
+
+message PlaySoundResponse {}
 
 message ShowTextDocumentRequest {
   string path = 2;

@@ -226,6 +226,11 @@ export class CliWindowServiceClient implements WindowServiceClientInterface {
 	async getActiveEditor(_request: proto.host.GetActiveEditorRequest): Promise<proto.host.GetActiveEditorResponse> {
 		return proto.host.GetActiveEditorResponse.create({})
 	}
+
+	async playSound(request: proto.host.PlaySoundRequest): Promise<proto.host.PlaySoundResponse> {
+		// Sound playback not supported in CLI mode
+		return proto.host.PlaySoundResponse.create({})
+	}
 }
 
 /**

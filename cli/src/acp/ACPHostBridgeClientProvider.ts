@@ -263,6 +263,12 @@ class ACPWindowServiceClient implements WindowServiceClientInterface {
 		Logger.debug("[ACPWindowServiceClient] getActiveEditor called (stub)")
 		return proto.host.GetActiveEditorResponse.create({})
 	}
+
+	async playSound(request: proto.host.PlaySoundRequest): Promise<proto.host.PlaySoundResponse> {
+		// Sound playback not supported in ACP mode
+		Logger.debug("[ACPWindowServiceClient] playSound called (stub)", { soundName: request.soundName })
+		return proto.host.PlaySoundResponse.create({})
+	}
 }
 
 /**

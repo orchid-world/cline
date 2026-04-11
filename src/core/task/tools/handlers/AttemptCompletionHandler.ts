@@ -9,8 +9,10 @@ import { showSystemNotification } from "@integrations/notifications"
 import { telemetryService } from "@services/telemetry"
 import { findLastIndex } from "@shared/array"
 import { COMPLETION_RESULT_CHANGES_FLAG } from "@shared/ExtensionMessage"
+import { PlaySoundRequest } from "@shared/proto/index.host"
 import { Logger } from "@shared/services/Logger"
 import { ClineDefaultTool } from "@shared/tools"
+import { HostProvider } from "@/hosts/host-provider"
 import type { ToolResponse } from "../../index"
 import { showNotificationForApproval } from "../../utils"
 import { buildUserFeedbackContent } from "../../utils/buildUserFeedbackContent"
@@ -227,6 +229,16 @@ export class AttemptCompletionHandler implements IToolHandler, IPartialBlockHand
 			},
 			{ message: result },
 		)
+
+		// Play task completion sound
+		try {
+			if (HostProvider.isInitialized()) {
+				await HostProvider.window.playSound(PlaySoundRequest.create({ soundName: "success" }))
+			}
+		} catch (error) {
+			// Sound playback failed - non-fatal
+			Logger.error("[TaskComplete] Failed to play completion sound:", error)
+		}
 
 		const { response, text, images, files: completionFiles } = await config.callbacks.ask("completion_result", "", false)
 		const prefix = "[attempt_completion] Result: Done"
