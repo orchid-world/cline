@@ -31,9 +31,10 @@ export const useShortcut = (shortcut: string, callback: (...args: unknown[]) => 
 				(event.target as HTMLElement).isContentEditable
 
 			const modifierMap: { [key: string]: boolean } = {
+				Ctrl: event.ctrlKey,
 				Control: event.ctrlKey,
 				Alt: event.altKey,
-				Meta: event.metaKey, // alias for Command
+				Meta: event.metaKey,
 				Shift: event.shiftKey,
 			}
 
