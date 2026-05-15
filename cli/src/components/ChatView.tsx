@@ -1143,7 +1143,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 	// 9. Ask responses -> return to send, numbers for option selection
 	// 10. Ctrl shortcuts -> Ctrl+A/E/W/U (handleCtrlShortcut)
 	// 11. Large paste detection -> collapse into placeholder
-	// 12. Normal input -> tab (mode toggle), return (submit), backspace, arrows, text
+	// 12. 普通输入 -> Shift+Tab（切换模式）、Ctrl+Y（自动批准）、return（提交）、backspace、方向键、文本
 	//
 	// Note: Home/End keys are handled separately by useHomeEndKeys hook because
 	// Ink doesn't expose them in useInput (it sets input='' for these keys).
@@ -1200,7 +1200,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 				setSelectedSlashIndex((i) => Math.min(filteredCommands.length - 1, i + 1))
 				return
 			}
-			if (key.tab || key.return) {
+			if ((key.tab && !key.shift) || key.return) {
 				const cmd = filteredCommands[selectedSlashIndex]
 				if (cmd) {
 					if (handleCliOnlySlashCommand(cmd.name)) {
@@ -1231,7 +1231,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 				setSelectedIndex((i) => Math.min(fileResults.length - 1, i + 1))
 				return
 			}
-			if (key.tab || key.return) {
+			if ((key.tab && !key.shift) || key.return) {
 				const file = fileResults[selectedIndex]
 				if (file) {
 					const newText = insertMention(textInput, mentionInfo.atIndex, file.path)
@@ -1417,11 +1417,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
 		// 12. Normal input handling
 		if (key.shift && key.tab) {
-			toggleAutoApproveAll()
+			toggleMode()
 			return
 		}
-		if (key.tab && !mentionInfo.inMentionMode && !slashInfo.inSlashMode) {
-			toggleMode()
+		if (key.ctrl && input?.toLowerCase() === "y") {
+			toggleAutoApproveAll()
 			return
 		}
 		if (key.return && !mentionInfo.inMentionMode && !slashInfo.inSlashMode && !pendingAsk && !isSpinnerActive) {
@@ -1649,7 +1649,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 										{mode === "act" ? "●" : "○"} Act
 									</Text>
 								</Box>
-								<Text color="gray">(Tab)</Text>
+								<Text color="gray">(Shift+Tab)</Text>
 							</Box>
 						</Box>
 
@@ -1691,10 +1691,10 @@ export const ChatView: React.FC<ChatViewProps> = ({
 							{autoApproveAll ? (
 								<Text>
 									<Text color="green">⏵⏵ Auto-approve all enabled</Text>
-									<Text color="gray"> (Shift+Tab)</Text>
+									<Text color="gray"> (Ctrl+Y)</Text>
 								</Text>
 							) : (
-								<Text color="gray">Auto-approve all disabled (Shift+Tab)</Text>
+								<Text color="gray">Auto-approve all disabled (Ctrl+Y)</Text>
 							)}
 						</Box>
 					</Box>

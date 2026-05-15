@@ -3,14 +3,14 @@
 		"messageEncoding": "none",
 		"showNavbar": false,
 		"postMessageHandler": "vscode",
-		"togglePlanActKeys": "Ctrl+Shift+a",
+		"togglePlanActKeys": "Shift+Tab",
 		"supportsTerminalMentions": true
 	},
 	"standalone": {
 		"messageEncoding": "json",
 		"showNavbar": true,
 		"postMessageHandler": "standalone",
-		"togglePlanActKeys": "Ctrl+Shift+p",
+		"togglePlanActKeys": "Shift+Tab",
 		"supportsTerminalMentions": false
 	}
 }

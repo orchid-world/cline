@@ -19,7 +19,7 @@ const FEATURE_TIPS: FeatureTipItem[] = [
 		text: "Add a .clinerules file to your project root to give Cline project-specific instructions.",
 	},
 	{
-		text: "Press Tab to switch between Plan and Act mode — plan an approach before Cline takes action.",
+		text: "Press Shift+Tab to switch between Plan and Act mode — plan an approach before Cline takes action.",
 	},
 	{
 		text: "Use @ in the chat input to add files, folders, or URLs as context for your task.",
@@ -52,7 +52,7 @@ const FEATURE_TIPS: FeatureTipItem[] = [
 		text: "Try 'npm i -g cline' to manage tasks on a Kankan board — orchestrate coding agents across worktrees.",
 	},
 	{
-		text: "Use Shift+Tab to toggle auto-approve all — let Cline work uninterrupted on trusted tasks.",
+		text: "Use Ctrl+Y to toggle auto-approve all — let Cline work uninterrupted on trusted tasks.",
 	},
 	{
 		text: "Press Up/Down arrows in an empty input to browse your previous task prompts.",

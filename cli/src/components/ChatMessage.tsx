@@ -21,11 +21,11 @@ import { DiffView } from "./DiffView"
 import { SubagentMessage } from "./SubagentMessage"
 
 /**
- * Add "(Tab)" hint after "Act mode" mentions in plain text.
- * Case-insensitive, avoids double-adding if already present.
+ * 在纯文本中的 "Act mode" 后追加 "(Shift+Tab)" 提示。
+ * 大小写不敏感，已存在快捷键时不会重复追加。
  */
 function addActModeHint(text: string, keyPrefix: string): React.ReactNode[] {
-	const actModeRegex = /\bact\s+mode\b(?!\s*\(tab\))/gi
+	const actModeRegex = /\bact\s+mode\b(?!\s*\((?:shift\+tab|tab)\))/gi
 	const parts = text.split(actModeRegex)
 	const matches = text.match(actModeRegex)
 
@@ -40,7 +40,7 @@ function addActModeHint(text: string, keyPrefix: string): React.ReactNode[] {
 			nodes.push(
 				<React.Fragment key={`${keyPrefix}-act-mode-${i}`}>
 					{matches[i]}
-					<Text color="gray"> (Tab)</Text>
+					<Text color="gray"> (Shift+Tab)</Text>
 				</React.Fragment>,
 			)
 		}

@@ -16,16 +16,16 @@ export async function submitPrompt(terminal: Terminal, prompt: string, delay = 5
 	await typeAndSubmit(terminal, prompt, delay)
 }
 
-/** Toggle between Plan and Act mode by pressing Tab */
+/** 通过 Shift+Tab 在 Plan 和 Act 模式之间切换 */
 export async function togglePlanAct(terminal: Terminal): Promise<void> {
-	terminal.write("\t")
+	terminal.write("\x1b[Z") // shift tab
 	// Wait for the mode indicator to update rather than sleeping a fixed amount
 	await expectVisible(terminal, /● Plan|● Act/)
 }
 
-/** Toggle auto-approve-all with Shift+Tab */
+/** 通过 Ctrl+Y 切换 auto-approve-all */
 export async function toggleAutoApproveAll(terminal: Terminal): Promise<void> {
-	terminal.write("\x1b[Z") // shift tab
+	terminal.write("\x19") // ctrl+y
 }
 
 /** Wait for "Task completed" to appear */

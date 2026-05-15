@@ -23,6 +23,16 @@ describe("useShortcut", () => {
 		expect(callback).not.toHaveBeenCalled()
 	})
 
+	it("should call the callback for Shift+Tab", () => {
+		const callback = vi.fn()
+		renderHook(() => useShortcut("Shift+Tab", callback, { disableTextInputs: false }))
+
+		const event = new KeyboardEvent("keydown", { key: "Tab", shiftKey: true })
+		window.dispatchEvent(event)
+
+		expect(callback).toHaveBeenCalled()
+	})
+
 	it("should not call the callback when typing in a text input when disableTextInputs is true", () => {
 		const callback = vi.fn()
 		renderHook(() => useShortcut("Meta+Shift+a", callback, { disableTextInputs: true }))

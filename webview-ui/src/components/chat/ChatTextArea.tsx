@@ -495,7 +495,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						return
 					}
 
-					if ((event.key === "Enter" || event.key === "Tab") && selectedSlashCommandsIndex !== -1) {
+					if (
+						(event.key === "Enter" || (event.key === "Tab" && !event.shiftKey)) &&
+						selectedSlashCommandsIndex !== -1
+					) {
 						event.preventDefault()
 						const commands = getMatchingSlashCommands(
 							slashCommandsQuery,
@@ -552,7 +555,7 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 						})
 						return
 					}
-					if ((event.key === "Enter" || event.key === "Tab") && selectedMenuIndex !== -1) {
+					if ((event.key === "Enter" || (event.key === "Tab" && !event.shiftKey)) && selectedMenuIndex !== -1) {
 						event.preventDefault()
 						const selectedOption = getContextMenuOptions(searchQuery, selectedType, queryItems, fileSearchResults)[
 							selectedMenuIndex
@@ -1337,10 +1340,10 @@ const ChatTextArea = forwardRef<HTMLTextAreaElement, ChatTextAreaProps>(
 				),
 			)
 		}
-		// Replace Meta with the platform specific key and uppercase the command letter.
+		// 将 Meta 替换为平台按键，并且只把单字母快捷键转成大写。
 		const togglePlanActKeys = usePlatform()
 			.togglePlanActKeys.replace("Meta", metaKeyChar)
-			.replace(/.$/, (match) => match.toUpperCase())
+			.replace(/\+([a-z])$/, (_, key) => `+${key.toUpperCase()}`)
 
 		return (
 			<div>

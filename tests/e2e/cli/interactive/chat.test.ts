@@ -7,14 +7,14 @@
 //   - /models view
 //   - /history view
 //   - /skills view
-//   - Plan/Act mode toggle (Tab)
+//   - Plan/Act mode toggle (Shift+Tab)
 //   - Plan task → toggle to Act → task executes
 //   - Act task → file edit permission prompt → Save / Reject
 //   - Task completed → Start New Task / Exit buttons
 //   - Auto-approve settings
 //   - Subagents
 //   - Web tools
-//   - Auto-approve all (Shift+Tab)
+//   - Auto-approve all (Ctrl+Y)
 // ---------------------------------------------------------------------------
 
 import { test } from "@microsoft/tui-test"
@@ -189,7 +189,7 @@ test.describe("Plan/Act mode toggle", () => {
 		env: clineEnv("default"),
 	})
 
-	test("pressing Tab toggles between Plan and Act mode", async ({ terminal }) => {
+	test("pressing Shift+Tab toggles between Plan and Act mode", async ({ terminal }) => {
 		await waitForChatReady(terminal)
 		// Default should show Act
 		await expectVisible(terminal, "○ Plan ● Act")
@@ -200,16 +200,16 @@ test.describe("Plan/Act mode toggle", () => {
 })
 
 // ---------------------------------------------------------------------------
-// Auto-approve all (Shift+Tab)
+// Auto-approve all (Ctrl+Y)
 // ---------------------------------------------------------------------------
-test.describe("Auto-approve all — Shift+Tab toggle", () => {
+test.describe("Auto-approve all — Ctrl+Y toggle", () => {
 	test.use({
 		program: { file: CLINE_BIN, args: ["--tui"] },
 		...TERMINAL_WIDE,
 		env: clineEnv("default"),
 	})
 
-	test("Shift+Tab toggles auto-approve-all setting", async ({ terminal }) => {
+	test("Ctrl+Y toggles auto-approve-all setting", async ({ terminal }) => {
 		await waitForChatReady(terminal)
 		await expectVisible(terminal, "Auto-approve all disabled")
 		await toggleAutoApproveAll(terminal)

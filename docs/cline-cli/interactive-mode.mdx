@@ -39,8 +39,8 @@ Keyboard shortcuts are the primary way to navigate and control the interactive C
 
 | Shortcut | Action |
 |----------|--------|
-| `Tab` | Toggle between Plan and Act mode |
-| `Shift+Tab` | Toggle auto-approve all actions |
+| `Shift+Tab` | Toggle Plan/Act mode |
+| `Ctrl+Y` | Toggle auto-approve all actions |
 | `Esc` | Exit or cancel current operation |
 
 ### Input Controls
@@ -120,7 +120,7 @@ Access the settings panel with `/settings`. Navigate between tabs using arrow ke
 
 ## Plan and Act Modes
 
-Cline operates in two modes, toggled with `Tab`. These modes work the same way in the CLI as they do in the VS Code extension. For a deeper explanation of how Plan and Act modes work, see the [Plan and Act documentation](/core-workflows/plan-and-act).
+Cline operates in two modes, toggled with `Shift+Tab`. These modes work the same way in the CLI as they do in the VS Code extension. For a deeper explanation of how Plan and Act modes work, see the [Plan and Act documentation](/core-workflows/plan-and-act).
 
 ### Plan Mode
 
@@ -137,12 +137,12 @@ In Act mode, Cline executes tasks directly. Use this when:
 - Running quick operations
 
 <Tip>
-Press `Tab` anytime to switch modes. Starting in Plan mode and switching to Act after reviewing is a common workflow.
+Press `Shift+Tab` anytime to switch modes. Starting in Plan mode and switching to Act after reviewing is a common workflow.
 </Tip>
 
 ## Auto-approve Toggle
 
-Press `Shift+Tab` to toggle auto-approve for all actions. This removes the approval prompts that appear before each action, letting Cline work continuously without interruption.
+Press `Ctrl+Y` to toggle auto-approve for all actions. This removes the approval prompts that appear before each action, letting Cline work continuously without interruption.
 
 ### When to Enable Auto-approve
 
@@ -220,7 +220,7 @@ I'm building a REST API with Express. The routes are in @src/routes/ and models 
 When you're unsure about the best approach:
 
 ```text
-[Tab to Plan mode]
+[Shift+Tab to Plan mode]
 How should I structure the database schema for a multi-tenant SaaS app?
 ```
 
