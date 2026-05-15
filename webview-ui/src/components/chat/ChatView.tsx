@@ -4,7 +4,7 @@ import { combineErrorRetryMessages } from "@shared/combineErrorRetryMessages"
 import { combineHookSequences } from "@shared/combineHookSequences"
 import { getApiMetrics, getLastApiReqTotalTokens } from "@shared/getApiMetrics"
 import { BooleanRequest, StringRequest } from "@shared/proto/cline/common"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useRef } from "react"
 import { useMount } from "react-use"
 import { normalizeApiConfiguration } from "@/components/settings/utils/providerUtils"
 import { useExtensionState } from "@/context/ExtensionStateContext"
@@ -85,6 +85,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		setExpandedRows,
 		textAreaRef,
 	} = chatState
+	const pendingChatInputFocusRef = useRef(false)
+
+	const focusChatInputAfterRender = useCallback(() => {
+		window.setTimeout(() => {
+			textAreaRef.current?.focus()
+			pendingChatInputFocusRef.current = false
+		}, 0)
+	}, [textAreaRef])
 
 	useEffect(() => {
 		const handleCopy = async (e: ClipboardEvent) => {
@@ -242,6 +250,33 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 
 		return cleanup
 	}, [isHidden])
+
+	useEffect(() => {
+		const cleanup = UiServiceClient.subscribeToChatButtonClicked(
+			{},
+			{
+				onResponse: () => {
+					// 从设置/历史等页面返回 Chat 时，等视图切回后再聚焦输入框。
+					pendingChatInputFocusRef.current = true
+					if (!isHidden) {
+						focusChatInputAfterRender()
+					}
+				},
+				onError: (error) => {
+					console.error("Error in chat input focus subscription:", error)
+				},
+				onComplete: () => {},
+			},
+		)
+
+		return cleanup
+	}, [focusChatInputAfterRender, isHidden])
+
+	useEffect(() => {
+		if (!isHidden && pendingChatInputFocusRef.current) {
+			focusChatInputAfterRender()
+		}
+	}, [focusChatInputAfterRender, isHidden])
 
 	// Set up addToInput subscription
 	useEffect(() => {
