@@ -9,6 +9,7 @@ import OnboardingView from "./components/onboarding/OnboardingView"
 import SettingsView from "./components/settings/SettingsView"
 import WelcomeView from "./components/welcome/WelcomeView"
 import WorktreesView from "./components/worktrees/WorktreesView"
+import { PLATFORM_CONFIG, PlatformType } from "./config/platform.config"
 import { useClineAuth } from "./context/ClineAuthContext"
 import { useExtensionState } from "./context/ExtensionStateContext"
 import { Providers } from "./Providers"
@@ -43,6 +44,32 @@ const AppContent = () => {
 	const [hasShownKanbanModal, setHasShownKanbanModal] = useState(false)
 
 	const { clineUser, organizations, activeOrganization } = useClineAuth()
+
+	useEffect(() => {
+		if (PLATFORM_CONFIG.type !== PlatformType.VSCODE) {
+			return
+		}
+
+		const postWebviewFocus = (focused: boolean) => {
+			PLATFORM_CONFIG.postMessage({
+				type: "webview_focus_changed",
+				webview_focus_changed: { focused },
+			})
+		}
+
+		const handleFocus = () => postWebviewFocus(true)
+		const handleBlur = () => postWebviewFocus(false)
+
+		window.addEventListener("focus", handleFocus)
+		window.addEventListener("blur", handleBlur)
+		postWebviewFocus(document.hasFocus())
+
+		return () => {
+			window.removeEventListener("focus", handleFocus)
+			window.removeEventListener("blur", handleBlur)
+			postWebviewFocus(false)
+		}
+	}, [])
 
 	const showUpdateAnnouncementModal = useCallback(() => {
 		setShowAnnouncement(true)

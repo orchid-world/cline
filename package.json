@@ -264,6 +264,14 @@
 				"when": "commentEditorFocused && commentController == cline-ai-review && !commentIsEmpty"
 			},
 			{
+				"command": "cline.plusButtonClicked",
+				"key": "ctrl+n",
+				"mac": "ctrl+n",
+				"win": "ctrl+n",
+				"linux": "ctrl+n",
+				"when": "cline.webviewFocus"
+			},
+			{
 				"command": "cline.addToChat",
 				"key": "cmd+'",
 				"mac": "cmd+'",

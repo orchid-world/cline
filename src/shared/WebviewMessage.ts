@@ -1,7 +1,8 @@
 export interface WebviewMessage {
-	type: "grpc_request" | "grpc_request_cancel"
+	type: "grpc_request" | "grpc_request_cancel" | "webview_focus_changed"
 	grpc_request?: GrpcRequest
 	grpc_request_cancel?: GrpcCancel
+	webview_focus_changed?: WebviewFocusChanged
 }
 
 export type GrpcRequest = {
@@ -14,6 +15,10 @@ export type GrpcRequest = {
 
 export type GrpcCancel = {
 	request_id: string // ID of the request to cancel
+}
+
+export type WebviewFocusChanged = {
+	focused: boolean
 }
 
 export type ClineAskResponse = "yesButtonClicked" | "noButtonClicked" | "messageResponse"

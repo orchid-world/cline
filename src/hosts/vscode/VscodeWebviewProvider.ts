@@ -82,6 +82,8 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 				if (this.webview?.visible) {
 					// View becoming visible should not steal editor focus.
 					await sendShowWebviewEvent(true)
+				} else {
+					await vscode.commands.executeCommand("setContext", "cline.webviewFocus", false)
 				}
 			},
 			null,
@@ -92,6 +94,7 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 		// This happens when the user closes the view or when the view is closed programmatically
 		webviewView.onDidDispose(
 			async () => {
+				await vscode.commands.executeCommand("setContext", "cline.webviewFocus", false)
 				await this.dispose()
 			},
 			null,
@@ -162,6 +165,14 @@ export class VscodeWebviewProvider extends WebviewProvider implements vscode.Web
 		const postMessageToWebview = (response: ExtensionMessage) => this.postMessageToWebview(response)
 
 		switch (message.type) {
+			case "webview_focus_changed": {
+				await vscode.commands.executeCommand(
+					"setContext",
+					"cline.webviewFocus",
+					message.webview_focus_changed?.focused === true,
+				)
+				break
+			}
 			case "grpc_request": {
 				if (message.grpc_request) {
 					await handleGrpcRequest(this.controller, postMessageToWebview, message.grpc_request)
